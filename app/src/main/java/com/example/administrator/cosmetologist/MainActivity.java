@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.ValueCallback;
@@ -15,6 +17,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private ValueCallback<Uri> uploadMessage;
@@ -99,10 +103,32 @@ public class MainActivity extends AppCompatActivity {
     }
     //图片上传
     private void openImageChooserActivity() {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
-        startActivityForResult(Intent.createChooser(i, "图片选择"), FILE_CHOOSER_RESULT_CODE);
+//        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+//        i.addCategory(Intent.CATEGORY_OPENABLE);
+//        i.setType("image/*");
+//        startActivityForResult(Intent.createChooser(i, "图片选择"), FILE_CHOOSER_RESULT_CODE);
+
+        //1.文件夹和相册
+        Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        pickIntent.setType("image/*");
+        //2.拍照
+        String path = Environment.getExternalStorageDirectory() + ""; //获取路径
+        String fileName = "PortraitFromCamera.jpg";//定义文件名
+        File file = new File(path,fileName);
+        if(!file.getParentFile().exists()){//文件夹不存在
+            file.getParentFile().mkdirs();
+        }
+        Uri imageUri = Uri.fromFile(file);
+        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        //3.选择器
+        Intent chooserIntent = Intent.createChooser(pickIntent,
+                getString(R.string.activity_main_pick_both));
+        //将拍照intent设置为额外初始化intent
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                new Intent[] { takePhotoIntent });
+
+        startActivityForResult(chooserIntent, FILE_CHOOSER_RESULT_CODE);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,6 +163,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (dataString != null)
                     results = new Uri[]{Uri.parse(dataString)};
+            }else{
+                String path = Environment.getExternalStorageDirectory() + ""; //获取路径
+                String fileName = "PortraitFromCamera.jpg";//定义文件名
+                File file = new File(path,fileName);
+                Uri imageUri = Uri.fromFile(file);
+                results=new Uri[]{imageUri};
             }
         }
         uploadMessageAboveL.onReceiveValue(results);
