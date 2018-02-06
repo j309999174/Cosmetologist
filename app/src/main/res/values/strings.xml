@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">欧奢伦美容师</string>
+    <string name="activity_main_pick_both">图片选择</string>
 </resources>

@@ -19,8 +19,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.io.File;
+import java.io.IOException;
+
+import id.zelory.compressor.Compressor;
 
 public class MainActivity extends AppCompatActivity {
+
+    private File actualImage;
+    private File compressedImage;
+
     private ValueCallback<Uri> uploadMessage;
     private ValueCallback<Uri[]> uploadMessageAboveL;
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
@@ -158,11 +165,28 @@ public class MainActivity extends AppCompatActivity {
                     results = new Uri[clipData.getItemCount()];
                     for (int i = 0; i < clipData.getItemCount(); i++) {
                         ClipData.Item item = clipData.getItemAt(i);
-                        results[i] = item.getUri();
+                        try {//图片压缩
+                            actualImage = FileUtil.from(this,  item.getUri());
+                            compressedImage=new Compressor(this).compressToFile(actualImage);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Compressor", "Compressed image save in " + item.getUri());
+                        //results[i] = item.getUri();
+                        results[i] = android.net.Uri.parse(compressedImage.toURI().toString());
                     }
                 }
-                if (dataString != null)
-                    results = new Uri[]{Uri.parse(dataString)};
+                if (dataString != null){
+                    try {//图片压缩
+                        actualImage = FileUtil.from(this, intent.getData());
+                        compressedImage = new Compressor(this).compressToFile(actualImage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Compresso1r", "Compresse1d image save in " + compressedImage.toURI().toString());
+                    results = new Uri[]{android.net.Uri.parse(compressedImage.toURI().toString())};
+                    //results = new Uri[]{Uri.parse(dataString)};
+                }
             }else{
                 String path = Environment.getExternalStorageDirectory() + ""; //获取路径
                 String fileName = "PortraitFromCamera.jpg";//定义文件名
