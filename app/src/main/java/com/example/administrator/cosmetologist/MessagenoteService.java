@@ -23,6 +23,7 @@ import java.sql.Statement;
 
 public class MessagenoteService extends Service {
     NotificationManager manager;//通知控制类
+    int frontnote_ID=1;
     int notification_ID=1;
 
     String notitle;
@@ -129,24 +130,24 @@ public class MessagenoteService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent1, int flags, int startId) {
 
         //前台通知，保持服务
-        //Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         //intent.putExtra("nolink", "/cosmetologist/customerlistchat");
-        //PendingIntent pintent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pintent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         Notification.Builder builder = new Notification.Builder(context);
         builder.setSmallIcon(R.drawable.logo);//设置图标
         builder.setTicker("");//手机状态栏的提示；
         builder.setWhen(System.currentTimeMillis());//设置时间
         builder.setContentTitle("时刻准备着");//设置标题
         builder.setContentText("随时接收顾客咨询");//设置通知内容
-        //builder.setContentIntent(pintent);//点击后的意图
+        builder.setContentIntent(pintent);//点击后的意图
         //builder.setDefaults(Notification.DEFAULT_ALL);//设置震动
         Notification notification = builder.build();//4.1以上
-        startForeground(notification_ID, notification);
+        startForeground(frontnote_ID, notification);
 
-        return super.onStartCommand(intent, flags, startId);
+        return super.onStartCommand(intent1, flags, startId);
 
     }
 
