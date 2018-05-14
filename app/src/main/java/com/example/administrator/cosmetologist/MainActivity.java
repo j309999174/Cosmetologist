@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     WebView webview;
 
 
-    static String webaddress="47.96.173.116";
+    static String webaddress="www.oushelun.cn";
     static int salnumber=123;
 
 
