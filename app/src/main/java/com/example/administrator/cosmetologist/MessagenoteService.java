@@ -57,7 +57,7 @@ public class MessagenoteService extends Service {
                     SharedPreferences sharedPreferencesunread=getSharedPreferences("myunread",MODE_PRIVATE);
                     SharedPreferences.Editor editorunread=sharedPreferencesunread.edit();
 
-                    //manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     while (rs.next()) {
                         Log.v("mns", "field1-->"+rs.getString(1)+"  field2-->"+rs.getString(2));
                         //判断发送方的未读信息数量是否改变，改变则执行通知，并重新储存未读数量
@@ -80,8 +80,9 @@ public class MessagenoteService extends Service {
                             //builder.getNotification();
                             //每日设session=当前时间，如果过了当前时间，则不再发送   还没做
 
-                            //manager.notify(notification_ID, notification);
-                            startForeground(notification_ID, notification);
+                            //改回manager，不覆盖前台通知
+                            manager.notify(notification_ID, notification);
+                            //startForeground(notification_ID, notification);
 
                             Log.v("unreadid", "" + notification_ID);
                             notification_ID+=notification_ID;
