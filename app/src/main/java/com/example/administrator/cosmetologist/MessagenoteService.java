@@ -37,7 +37,6 @@ public class MessagenoteService extends Service {
         //1.取出cusid
         SharedPreferences sharedPreferences=getSharedPreferences("mycusid",MODE_PRIVATE);
         final int cosid=sharedPreferences.getInt("cosid",0);
-        final int salnumber=sharedPreferences.getInt("salnumber",0);
 
         //2.mysql查询
         Runnable runnable=new Runnable() {

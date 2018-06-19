@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     static String webaddress="www.oushelun.cn";
-    static int salnumber=123;
 
 
     String picturefileName = "picturefileName";//上传图片连续2次图片名不能相同，否则无法上传
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //默认的主页
-        targetUrl = "http://"+webaddress+"/cosmetologist/customerlist/"+salnumber;
+        targetUrl = "http://"+webaddress+"/cosmetologist/customerlist";
 
         //通知页的跳转
 
@@ -277,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences=getSharedPreferences("mycusid",MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putInt("cosid",cosid);
-        editor.putInt("salnumber",salnumber);
         editor.commit();
         //通知线程的开始
         new Thread(newrunnable).start();
